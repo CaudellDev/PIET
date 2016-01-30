@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package piet.image.translator;
 
 import java.awt.BasicStroke;
@@ -12,10 +7,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
-/**
- *
- * @author Tyler
- */
 public class PietPanel extends JPanel {
     public static final int DEFAULT_CODEL_WIDTH = 50;
     private PietProgram program;

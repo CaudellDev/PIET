@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package piet.image.translator;
 
 import java.awt.Button;
@@ -30,10 +25,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author Tyler
- */
 public class PietImageTranslator 
         extends Application 
         implements PietProgram.InIntCallback, 
