@@ -5,6 +5,7 @@
  */
 package piet.image.translator;
 
+import java.awt.Button;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,12 @@ import javax.swing.SwingUtilities;
  *
  * @author Tyler
  */
-public class PietImageTranslator extends Application {
+public class PietImageTranslator 
+        extends Application 
+        implements PietProgram.InIntCallback, 
+                   PietProgram.InStrCallback, 
+                   PietProgram.OutIntCallback, 
+                   PietProgram.OutStrCallback {
     
     private Stage stage;
     private PietProgram program;
@@ -41,8 +47,10 @@ public class PietImageTranslator extends Application {
     
     @FXML private MenuItem openMenu = new MenuItem();
     @FXML private MenuItem aboutMenu = new MenuItem();
+    
+    @FXML private Button stepBtn = new Button();
+    
     @FXML private ImageView imageView = new ImageView();
-    @FXML private SwingNode swingNode = new SwingNode();
     
     @FXML
     protected void handleButtonAction(ActionEvent event) {
@@ -54,23 +62,15 @@ public class PietImageTranslator extends Application {
                 final File file = fileChooser.showOpenDialog(stage);
                 BufferedImage image = ImageIO.read(file);
                 program = new PietProgram(image);
-
-                if (pietPanel == null) {
-                    pietPanel = new PietPanel();
-                }
-
-                pietPanel.loadPietProgram(program);
-                pietPanel.setOpaque(true);
-
-                if (file != null) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            swingNode.setContent(new JButton("Test"));
-                            System.out.println("Swing Node content has been set.");
-                        }
-                    });
-                }
+                
+                program.setInIntCallback(this);
+                program.setInStrCallback(this);
+                program.setOutIntCallback(this);
+                program.setOutStrCallback(this);
+                
+                Image imgViewImage = new Image(file.toURI().toString());
+                imageView.setImage(imgViewImage);
+                
             } catch (IOException ex) {
                 Logger.getLogger(PietImageTranslator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -87,18 +87,29 @@ public class PietImageTranslator extends Application {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        } else if (event.getSource() == stepBtn) {
+            System.out.println("Step button has been pressed.");
+            if (program != null && !program.isComplete()) {
+                program.step();
+            }
+        } 
+//        else if (event.getSource() == runBtn) {
+//            if (program != null && !program.isComplete()) {
+//                program.run();
+//            }
+//        } else if (event.getSource() == resetBtn) {
+//            if (program != null && !program.isComplete()) {
+//                program.reset();
+//            }
+//        }
     }  
     
     @Override
     public void start(final Stage stage) throws Exception {
-        System.out.println("JavaFX version: " + com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
-        
         this.stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("MainPietLayout.fxml"));
         
         Scene scene = new Scene(root);
-        
         
         this.stage.setScene(scene);
         this.stage.show();
@@ -109,6 +120,26 @@ public class PietImageTranslator extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public int onInInt() {
+        return 0;
+    }
+
+    @Override
+    public String onInStr() {
+        return "";
+    }
+
+    @Override
+    public void onOutInt(int value) {
+        System.out.print(value);
+    }
+
+    @Override
+    public void onOutStr(String value) {
+        System.out.print(value);
     }
     
 }

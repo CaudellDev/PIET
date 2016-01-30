@@ -30,9 +30,13 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button layoutX="735.0" layoutY="535.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="670.0" layoutY="535.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="605.0" layoutY="535.0" mnemonicParsing="false" text="Button" />
-      <SwingNode layoutY="31.0" />
+	  
+      <Button layoutX="665.0" layoutY="561.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Reset" />
+      <Button layoutX="609.0" layoutY="561.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Run" />
+      <Button fx:id="stepBtn" layoutX="730.0" layoutY="561.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Step" />
+	  
+      <ImageView fitHeight="557.0" fitWidth="581.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+      <TextArea layoutX="587.0" layoutY="240.0" prefHeight="303.0" prefWidth="200.0" />
+      <TextArea layoutX="587.0" layoutY="50.0" prefHeight="165.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

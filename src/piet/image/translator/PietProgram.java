@@ -781,19 +781,19 @@ public class PietProgram {
         }
     }
     
-    public void setCallback(InIntCallback callback) {
+    public void setInIntCallback(InIntCallback callback) {
         inIntCallback = callback;
     }
     
-    public void setCallback(InStrCallback callback) {
+    public void setInStrCallback(InStrCallback callback) {
         inStrCallback = callback;
     }
     
-    public void setCallback(OutIntCallback callback) {
+    public void setOutIntCallback(OutIntCallback callback) {
         outIntCallback = callback;
     }
     
-    public void setCallback(OutStrCallback callback) {
+    public void setOutStrCallback(OutStrCallback callback) {
         outStrCallback = callback;
     }
     
