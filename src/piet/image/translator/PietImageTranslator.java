@@ -1,6 +1,5 @@
 package piet.image.translator;
 
-import java.awt.Button;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +14,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -36,12 +37,16 @@ public class PietImageTranslator
     private PietProgram program;
     private PietPanel pietPanel;
     
-    @FXML private MenuItem openMenu = new MenuItem();
-    @FXML private MenuItem aboutMenu = new MenuItem();
+    @FXML private MenuItem openMenu;
+    @FXML private MenuItem aboutMenu;
     
-    @FXML private Button stepBtn = new Button();
+    @FXML private Button stepBtn;
+    @FXML private Button runBtn;
+    @FXML private Button resetBtn;
+    @FXML private Button clearBtn;
     
-    @FXML private ImageView imageView = new ImageView();
+    @FXML private ImageView imageView;
+    @FXML private TextArea outputTextArea;
     
     @FXML
     protected void handleButtonAction(ActionEvent event) {
@@ -61,12 +66,12 @@ public class PietImageTranslator
                 
                 Image imgViewImage = new Image(file.toURI().toString());
                 imageView.setImage(imgViewImage);
+                outputTextArea.clear();
                 
             } catch (IOException ex) {
                 Logger.getLogger(PietImageTranslator.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (event.getSource() == aboutMenu) {
-            System.out.println("About Menu clicked.");
             try {
                 Stage aboutStage = new Stage();
                 Parent root = FXMLLoader.load(getClass().getResource("AboutWindowFXML.fxml"));
@@ -83,16 +88,19 @@ public class PietImageTranslator
             if (program != null && !program.isComplete()) {
                 program.step();
             }
-        } 
-//        else if (event.getSource() == runBtn) {
-//            if (program != null && !program.isComplete()) {
-//                program.run();
-//            }
-//        } else if (event.getSource() == resetBtn) {
-//            if (program != null && !program.isComplete()) {
-//                program.reset();
-//            }
-//        }
+        } else if (event.getSource() == runBtn) {
+            System.out.println("Step button has been pressed.");
+            if (program != null && !program.isComplete()) {
+                program.run();
+            }
+        } else if (event.getSource() == resetBtn) {
+            if (program != null) {
+                program.reset();
+                outputTextArea.clear();
+            }
+        } else if (event.getSource() == clearBtn) {
+            outputTextArea.clear();
+        }
     }  
     
     @Override
@@ -126,11 +134,13 @@ public class PietImageTranslator
     @Override
     public void onOutInt(int value) {
         System.out.print(value);
+        outputTextArea.appendText(String.valueOf(value));
     }
 
     @Override
     public void onOutStr(String value) {
         System.out.print(value);
+        outputTextArea.appendText(value);
     }
     
 }

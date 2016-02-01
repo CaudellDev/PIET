@@ -105,6 +105,7 @@ public class PietProgram {
     }
     
     public void run() {
+        System.out.println("Running Piet Program...");
         while (!complete) {
             step();
         }
