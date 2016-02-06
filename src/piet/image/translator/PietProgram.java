@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
@@ -142,6 +143,8 @@ public class PietProgram {
 //        System.out.println("Hue change and lightness change: " + hueChange + ", " + lightChange);
 //        System.out.println("Curr codel, next codel: " + currCodel + ", " + nextCodel);
         
+        performMove();
+        
         try {
             if (hueChange == 0) {
                 if (lightChange == 0) {
@@ -201,7 +204,6 @@ public class PietProgram {
 //        stack.add(0);
 //        System.out.println("Stack: " + stack);
         
-        performMove();
     }
     
     public boolean isComplete() {
@@ -297,19 +299,18 @@ public class PietProgram {
         }
         
         ArrayList<PietCodel> list = blockCountHelper(codel);
-        list.add(codel);
         
         // Use the array of codels in the block, and
         // use the size to for each value in the array.
         int result = list.size();
         for (PietCodel item : list) item.setValue(result);
         
-//        System.out.println("Block count: " + result);
+        System.out.println("Block count: " + result);
         
         return result;
     }
     
-    private ArrayList<PietCodel> blockCountHelper(PietCodel codel) {
+    private ArrayList<PietCodel> blockCountHelper3(PietCodel codel) {
         ArrayList<PietCodel> result = new ArrayList<>();
         codel.setValue(PietCodel.CHECKED);
         int col = codel.getCol();
@@ -319,7 +320,7 @@ public class PietProgram {
         PietCodel ajac = get(col + 1, row);
         if (ajac != null && codel.equals(ajac.getColor()) && ajac.getValue() == PietCodel.DEFAULT) {
 //            System.out.println("blockCountHelper going right...");
-            ArrayList<PietCodel> nextCodels = blockCountHelper(ajac);
+            ArrayList<PietCodel> nextCodels = blockCountHelper3(ajac);
             result.add(ajac);
             result.addAll(nextCodels);
         }
@@ -328,7 +329,7 @@ public class PietProgram {
         ajac = get(col, row + 1);
         if (ajac != null && codel.equals(ajac.getColor()) && ajac.getValue() == PietCodel.DEFAULT) {
 //            System.out.println("blockCountHelper going down...");
-            ArrayList<PietCodel> nextCodels = blockCountHelper(ajac);
+            ArrayList<PietCodel> nextCodels = blockCountHelper3(ajac);
             result.add(ajac);
             result.addAll(nextCodels);
         }
@@ -337,7 +338,7 @@ public class PietProgram {
         ajac = get(col - 1, row);
         if (ajac != null && codel.equals(ajac.getColor()) && ajac.getValue() == PietCodel.DEFAULT) {
 //            System.out.println("blockCountHelper going left...");
-            ArrayList<PietCodel> nextCodels = blockCountHelper(ajac);
+            ArrayList<PietCodel> nextCodels = blockCountHelper3(ajac);
             result.add(ajac);
             result.addAll(nextCodels);
         }
@@ -346,13 +347,55 @@ public class PietProgram {
         ajac = get(col, row - 1);
         if (ajac != null && codel.equals(ajac.getColor()) && ajac.getValue() == PietCodel.DEFAULT) {
 //            System.out.println("blockCountHelper going up...");
-            ArrayList<PietCodel> nextCodels = blockCountHelper(ajac);
+            ArrayList<PietCodel> nextCodels = blockCountHelper3(ajac);
             result.add(ajac);
             result.addAll(nextCodels);
         }
         
 //        System.out.println("blockCountHelper finished...");
         return result;
+    }
+    
+    /**
+     * 
+     * @param codel
+     * @return Returns an ArrayList containing all the Codels in the Codel Block.
+     */
+    private ArrayList<PietCodel> blockCountHelper(PietCodel codel) {
+        ArrayList<PietCodel> accumulator = new ArrayList<>();
+        LinkedList<PietCodel> queue = new LinkedList<>(); // We need to be able to traverse back to previous codels.
+
+        int col;
+        int row;
+        queue.add(codel);
+
+        // Keep going until no codels are being added and have been checked.
+        while (!queue.isEmpty()) {
+            
+            PietCodel ajac = queue.remove();
+            if (ajac != null && codel.equals(ajac.getColor()) && ajac.getValue() != PietCodel.CHECKED ) {
+                accumulator.add(ajac);
+                ajac.setValue(PietCodel.CHECKED);
+                col = ajac.getCol();
+                row = ajac.getRow();
+            } else {
+                continue;
+            }
+
+            if ( get(col + 1, row) != null && get(col + 1, row).getValue() != PietCodel.CHECKED && !queue.contains(get(col + 1, row)) ) { queue.addFirst(get(col + 1, row)); }
+            if ( get(col , row + 1) != null && get(col, row + 1).getValue() != PietCodel.CHECKED && !queue.contains(get(col, row + 1)) ) { queue.addFirst(get(col, row + 1)); }
+            if ( get(col - 1, row) != null && get(col - 1, row).getValue() != PietCodel.CHECKED && !queue.contains(get(col - 1, row)) ) { queue.addFirst(get(col - 1, row)); }
+            if ( get(col , row - 1) != null && get(col, row - 1).getValue() != PietCodel.CHECKED && !queue.contains(get(col, row - 1)) ) { queue.addFirst(get(col, row- 1)); }
+
+//            System.out.println("Accumilator: " + accumulator);
+//            System.out.println("Queue: " + queue);
+//            System.out.println("Adjacent: " + ajac + "\n");
+
+        }
+
+//        System.out.println("Final accumilator result: " + accumulator + "\n");
+    
+        return accumulator;
     }
     
     private PietCodel[] getCodelBlockCorners(PietCodel codel) {
@@ -385,7 +428,7 @@ public class PietProgram {
             }
         }
         
-//        System.out.println("Maxes --> Right: " + maxRight + ", Down: " + maxDown + ", Left: " + maxLeft + ", Up: " + maxUp);
+        System.out.println("Maxes --> Right: " + maxRight + ", Down: " + maxDown + ", Left: " + maxLeft + ", Up: " + maxUp);
         
         // Indexes --> Right: 0, 1 | Down: 2, 3 | Left: 4, 5 | Up: 6, 7
         ArrayList<PietCodel> resultList = new ArrayList<>();
@@ -428,7 +471,7 @@ public class PietProgram {
             }
         }
         
-//        System.out.println("Corner array: " + resultList);
+        System.out.println("Corner array: " + resultList);
         
         PietCodel[] result = new PietCodel[8];
         return resultList.toArray(result);
@@ -534,6 +577,7 @@ public class PietProgram {
     private void performMove() {
         PietCodel newNextCodel = setNextCodel();
         if (newNextCodel != null) {
+            prevCodel = currCodel;
             currCodel = nextCodel;
             nextCodel = newNextCodel;
         }
@@ -644,7 +688,7 @@ public class PietProgram {
     }
     
     private void push() {
-        int value = getBlockCount(currCodel);
+        int value = getBlockCount(prevCodel);
         //System.out.println("getBlockCount value: " + value);
         stack.push(value);
     }
