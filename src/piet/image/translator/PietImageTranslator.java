@@ -48,9 +48,17 @@ public class PietImageTranslator
     @FXML private ImageView imageView;
     @FXML private TextArea outputTextArea;
     
+//    private static final Image[] icons = {
+//        new Image("PIET Icon/PIET-Icon (32x32).png"),
+//        new Image("PIET Icon/PIET-Icon (64x64).png"),
+//        new Image("PIET Icon/PIET-Icon (128x128).png"),
+//        new Image("PIET Icon/PIET-Icon (256x256).png"),
+//        new Image("PIET Icon/PIET-Icon (Orig).png"),
+//    };
+    
     @FXML
     protected void handleButtonAction(ActionEvent event) {
-        System.out.println("handleButtonAction() called.");
+//        System.out.println("handleButtonAction() called.");
         if (event.getSource() == openMenu) {
             try {
                 FileChooser fileChooser = new FileChooser();
@@ -84,12 +92,12 @@ public class PietImageTranslator
                 e.printStackTrace();
             }
         } else if (event.getSource() == stepBtn) {
-            System.out.println("Step button has been pressed.");
+//            System.out.println("Step button has been pressed.");
             if (program != null && !program.isComplete()) {
                 program.step();
             }
         } else if (event.getSource() == runBtn) {
-            System.out.println("Step button has been pressed.");
+//            System.out.println("Step button has been pressed.");
             if (program != null && !program.isComplete()) {
                 program.run();
             }
@@ -104,13 +112,16 @@ public class PietImageTranslator
     }  
     
     @Override
-    public void start(final Stage stage) throws Exception {
+    public void start(Stage stage) throws Exception {
         this.stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("MainPietLayout.fxml"));
         
-        Scene scene = new Scene(root);
+        for (int i = 0; i < 5; i++) {
+            this.stage.getIcons().add(getIcon(i));
+        }
         
-        this.stage.setScene(scene);
+        this.stage.setTitle("P.I.E.T");
+        this.stage.setScene(new Scene(root));
         this.stage.show();
     }
 
@@ -123,7 +134,7 @@ public class PietImageTranslator
 
     @Override
     public int onInInt() {
-        return 0;
+        return 15;
     }
 
     @Override
@@ -143,4 +154,19 @@ public class PietImageTranslator
         outputTextArea.appendText(value);
     }
     
+    private Image getIcon(int icon) {
+        String ico = "src/piet/image/translator/PIET Icons/";
+        
+        switch(icon) {
+            case 0: ico += "PIET-Icon-(32x32).png"; break;
+            case 1: ico += "PIET-Icon-(64x64).png"; break;
+            case 2: ico += "PIET-Icon-(128x128).png"; break;
+            case 3: ico += "PIET-Icon-(256x256).png"; break;
+            case 4: ico += "PIET-Icon-(Orig).png"; break;
+        }
+        
+        File image = new File(ico);
+        String uri = image.toURI().toString();
+        return new Image(uri);
+    }
 }
