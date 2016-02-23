@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -16,9 +17,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -37,6 +44,8 @@ public class PietImageTranslator
     private PietProgram program;
     private PietPanel pietPanel;
     
+    ArrayList<ArrayList<Region>> pietCode;
+    
     @FXML private MenuItem openMenu;
     @FXML private MenuItem aboutMenu;
     
@@ -47,6 +56,8 @@ public class PietImageTranslator
     
     @FXML private ImageView imageView;
     @FXML private TextArea outputTextArea;
+    @FXML private GridPane gamepane;
+    @FXML private ScrollPane scrollPane;
     
 //    private static final Image[] icons = {
 //        new Image("PIET Icon/PIET-Icon (32x32).png"),
@@ -74,6 +85,8 @@ public class PietImageTranslator
                 
                 Image imgViewImage = new Image(file.toURI().toString());
                 imageView.setImage(imgViewImage);
+                imageView.setFitWidth(imgViewImage.getWidth());
+                imageView.setFitHeight(imgViewImage.getHeight());
                 outputTextArea.clear();
                 
             } catch (IOException ex) {
@@ -115,13 +128,33 @@ public class PietImageTranslator
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("MainPietLayout.fxml"));
+        Region region = new Region();
+//        region.setI
+        
+//        gamepane.getStylesheets().add("PietCodelColors.css");
         
         for (int i = 0; i < 5; i++) {
             this.stage.getIcons().add(getIcon(i));
         }
         
+        Rectangle rect = new Rectangle();
+        rect.setX(50);
+        rect.setY(50);
+        rect.setWidth(100);
+        rect.setHeight(100);
+        rect.setFill(Color.BLUE);
+        rect.setOnMouseClicked(new EventHandler<MouseEvent> () {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("Clicked on square: (" + event.getX() + ", " + event.getY() + ")");
+            }
+        });
+        
+        Scene scene = new Scene(root);
+        
+        
         this.stage.setTitle("P.I.E.T");
-        this.stage.setScene(new Scene(root));
+        this.stage.setScene(scene);
         this.stage.show();
     }
 

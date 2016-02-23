@@ -35,18 +35,25 @@
       <Button fx:id="resetBtn" layoutX="665.0" layoutY="561.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Reset" />
       <Button fx:id="runBtn" layoutX="609.0" layoutY="561.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Run" />
       <Button fx:id="stepBtn" layoutX="730.0" layoutY="561.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Step" />
-	  
-      <ImageView fx:id="imageView" fitHeight="557.0" fitWidth="581.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
       <TextArea fx:id="outputTextArea" editable="false" layoutX="587.0" layoutY="242.0" prefHeight="301.0" prefWidth="200.0">
          <font>
             <Font size="16.0" />
          </font></TextArea>
-      <TextArea layoutX="587.0" layoutY="50.0" prefHeight="157.0" prefWidth="200.0" />
-      <Label layoutX="587.0" layoutY="217.0" text="Output:">
+      <TextArea editable="false" layoutX="587.0" layoutY="35.0" prefHeight="172.0" prefWidth="200.0" />
+      <Label layoutX="587.0" layoutY="215.0" text="Output:">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
       <Button fx:id="clearBtn" layoutX="742.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="45.0" text="Clear" />
+      <ScrollPane fx:id="scrollPane" layoutX="4.0" layoutY="36.0" prefHeight="562.0" prefWidth="578.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="imageView" fitHeight="557.0" fitWidth="581.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
    </children>
 </AnchorPane>

@@ -30,7 +30,14 @@ public class PietProgram {
     private String codelChooser;
     private boolean rotDP; // This helps decide whether to rotate the DP or toggle the CC when needed.
     private boolean catchErrors;
+    
     private final boolean debugOps = true;
+    private final int colorFF = 255;
+    private final int colorC0 = 192;
+    private final int color00 = 0;
+    private final int toleranceFF = 32;
+    private final int toleranceC0 = 31;
+    private final int tolerance00 = 96;
     
     private PietCodel nextCodel;
     private PietCodel currCodel;
@@ -239,7 +246,7 @@ public class PietProgram {
                 int firstPix = image.getRGB(x, y);
                 int secondPix = image.getRGB(x + 1, y);
                 
-                if (firstPix == secondPix) {
+                if (firstPix == fixColor(secondPix)) {
                     count++;
                 } else {
                     if (smallestWidth == -1 || count < smallestWidth) {
@@ -283,6 +290,42 @@ public class PietProgram {
             code.add(codels);
         }
         
+    }
+    
+    private int fixColor(int color) {
+        Color colorObj = new Color(color);
+        int red = colorObj.getRed();
+        int green = colorObj.getGreen();
+        int blue = colorObj.getBlue();
+        
+        // Red
+        if (red > (colorFF - toleranceFF)) {
+            red = colorFF;
+        } else if (red > (colorC0 - toleranceC0)) {
+            red = colorC0;
+        } else {
+            red = color00;
+        }
+        
+        // Green
+        if (green > (colorFF - toleranceFF)) {
+            green = colorFF;
+        } else if (green > (colorC0 - toleranceC0)) {
+            green = colorC0;
+        } else {
+            green = color00;
+        }
+        
+        // Blue
+        if (blue > (colorFF - toleranceFF)) {
+            blue = colorFF;
+        } else if (blue > (colorC0 - toleranceC0)) {
+            blue = colorC0;
+        } else {
+            blue = color00;
+        }
+        
+        return (new Color(red, green, blue)).getRGB();
     }
     
     public PietCodel get(int colIndex, int rowIndex) {
